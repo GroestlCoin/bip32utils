@@ -12,7 +12,8 @@ setup(
     url = 'http://github.com/satoshilabs/bip32utils',
     description = 'Utilities for generating and using Bitcoin Hierarchical Deterministic wallets (BIP0032).',
     license = 'MIT',
-    install_requires = ['ecdsa'],
+    install_requires = ['ecdsa', 'groestlcoin_hash'],
+    dependency_links=['git+https://github.com/groestlcoin/groestlcoin-hash-python#egg=groestlcoin_hash'],
     packages = ['bip32utils'],
     scripts = ['bip32gen']
 )
