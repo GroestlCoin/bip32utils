@@ -10,7 +10,7 @@ import hashlib
 import ecdsa
 import struct
 import codecs
-from . import Base58
+import Base58
 
 from hashlib import sha256
 from ecdsa.curves import SECP256k1
@@ -283,7 +283,7 @@ class BIP32Key(object):
 
     def Address(self):
         "Return compressed public key address"
-        addressversion = b'\x00' if not self.testnet else b'\x6f'
+        addressversion = b'\x24' if not self.testnet else b'\x6f'
         vh160 = addressversion + self.Identifier()
         return Base58.check_encode(vh160)
 
