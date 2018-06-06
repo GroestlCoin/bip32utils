@@ -11,6 +11,7 @@ import ecdsa
 import struct
 import codecs
 from . import Base58 
+from . import segwit_addr
 
 from hashlib import sha256
 from ecdsa.curves import SECP256k1
@@ -54,6 +55,8 @@ XPUB_HEADERS_TEST = {
     'p2wpkh':      codecs.decode('045f1cf6', 'hex'),  # vpub
     'p2wsh':       codecs.decode('02575483', 'hex'),  # Vpub
 }
+HRP_MAIN = 'grs'
+HRP_TEST = 'tgrs'
 
 
 class BIP32Key(object):
@@ -319,9 +322,27 @@ class BIP32Key(object):
         "Return appropriate address format."
         if self.script_type in ['p2wpkh-p2sh', 'p2wsh-p2sh']:
             return self.P2WPKHoP2SHAddress()
+        elif self.script_type == 'p2wpkh':
+            return self.P2WPKHAddress()
+        elif self.script_type == 'p2wsh':
+            return self.P2WSHAddress()
         addressversion = b'\x24' if not self.testnet else b'\x6f'
         vh160 = addressversion + self.Identifier()
         return Base58.check_encode(vh160)
+
+    def P2WPKHAddress(self):
+        "Return P2WPKH segwit address"
+        pk_bytes = self.PublicKey()
+        pk_hash = hashlib.new('ripemd160', sha256(pk_bytes).digest()).digest()
+        hrp = HRP_TEST if self.testnet else HRP_MAIN
+        return segwit_addr.encode(hrp, 0, pk_hash)
+
+    def P2WSHAddress(self):
+        "Return P2WSH segwit address"
+        pk_bytes = self.PublicKey()
+        pk_hash = sha256(pk_bytes).digest()
+        hrp = HRP_TEST if self.testnet else HRP_MAIN
+        return segwit_addr.encode(hrp, 0, pk_hash)
 
     def P2WPKHoP2SHAddress(self):
         "Return P2WPKH over P2SH segwit address"
