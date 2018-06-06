@@ -23,10 +23,38 @@ CURVE_GEN       = ecdsa.ecdsa.generator_secp256k1
 CURVE_ORDER     = CURVE_GEN.order()
 FIELD_ORDER     = SECP256k1.curve.p()
 INFINITY        = ecdsa.ellipticcurve.INFINITY
-EX_MAIN_PRIVATE = [ codecs.decode('0488ade4', 'hex') ] # Version strings for mainnet extended private keys
-EX_MAIN_PUBLIC  = [ codecs.decode('0488b21e', 'hex'), codecs.decode('049d7cb2', 'hex') ] # Version strings for mainnet extended public keys
-EX_TEST_PRIVATE = [ codecs.decode('04358394', 'hex') ] # Version strings for testnet extended private keys
-EX_TEST_PUBLIC  = [ codecs.decode('043587CF', 'hex') ] # Version strings for testnet extended public keys
+
+# From Electrum-GRS.
+XPRV_HEADERS_MAIN = {
+    'standard':    codecs.decode('0488ade4', 'hex'),  # xprv
+    'p2wpkh-p2sh': codecs.decode('049d7878', 'hex'),  # yprv
+    'p2wsh-p2sh':  codecs.decode('0295b005', 'hex'),  # Yprv
+    'p2wpkh':      codecs.decode('04b2430c', 'hex'),  # zprv
+    'p2wsh':       codecs.decode('02aa7a99', 'hex'),  # Zprv
+}
+XPUB_HEADERS_MAIN = {
+    'standard':    codecs.decode('0488b21e', 'hex'),  # xpub
+    'p2wpkh-p2sh': codecs.decode('049d7cb2', 'hex'),  # ypub
+    'p2wsh-p2sh':  codecs.decode('0295b43f', 'hex'),  # Ypub
+    'p2wpkh':      codecs.decode('04b24746', 'hex'),  # zpub
+    'p2wsh':       codecs.decode('02aa7ed3', 'hex'),  # Zpub
+}
+
+XPRV_HEADERS_TEST = {
+    'standard':    codecs.decode('04358394', 'hex'),  # tprv
+    'p2wpkh-p2sh': codecs.decode('044a4e28', 'hex'),  # uprv
+    'p2wsh-p2sh':  codecs.decode('024285b5', 'hex'),  # Uprv
+    'p2wpkh':      codecs.decode('045f18bc', 'hex'),  # vprv
+    'p2wsh':       codecs.decode('02575048', 'hex'),  # Vprv
+}
+XPUB_HEADERS_TEST = {
+    'standard':    codecs.decode('043587cf', 'hex'),  # tpub
+    'p2wpkh-p2sh': codecs.decode('044a5262', 'hex'),  # upub
+    'p2wsh-p2sh':  codecs.decode('024285ef', 'hex'),  # Upub
+    'p2wpkh':      codecs.decode('045f1cf6', 'hex'),  # vpub
+    'p2wsh':       codecs.decode('02575483', 'hex'),  # Vpub
+}
+
 
 class BIP32Key(object):
 
@@ -62,19 +90,21 @@ class BIP32Key(object):
 
         # Verify address version/type
         version = raw[:4]
-        if version in EX_MAIN_PRIVATE:
-            is_testnet = False
-            is_pubkey = False
-        elif version in EX_TEST_PRIVATE:
-            is_testnet = True
-            is_pubkey = False
-        elif version in EX_MAIN_PUBLIC:
-            is_testnet = False
-            is_pubkey = True
-        elif version in EX_TEST_PUBLIC:
-            is_testnet = True
-            is_pubkey = True
-        else:
+        known_version = False
+        for (testnet_header, public_header, d) in [
+            (False, False, XPRV_HEADERS_MAIN),
+            (True,  False, XPRV_HEADERS_TEST),
+            (False, True,  XPUB_HEADERS_MAIN),
+            (True,  False, XPUB_HEADERS_TEST),
+        ]:
+            for key, header in d.items():
+                if version == header:
+                    script_type = key
+                    is_testnet = testnet_header
+                    is_pubkey = public_header
+                    known_version = True
+                    break
+        if not known_version:
             raise ValueError("unknown extended key version")
 
         # Extract remaining fields
@@ -103,14 +133,14 @@ class BIP32Key(object):
             point = ecdsa.ellipticcurve.Point(SECP256k1.curve, x, y)
             secret = ecdsa.VerifyingKey.from_public_point(point, curve=SECP256k1)
 
-        key = BIP32Key(secret=secret, chain=chain, depth=depth, index=child, fpr=fpr, public=is_pubkey, testnet=is_testnet)
+        key = BIP32Key(secret=secret, chain=chain, depth=depth, index=child, fpr=fpr, public=is_pubkey, testnet=is_testnet, script_type=script_type)
         if not is_pubkey and public:
             key = key.SetPublic()
         return key
 
 
     # Normal class initializer
-    def __init__(self, secret, chain, depth, index, fpr, public=False, testnet=False):
+    def __init__(self, secret, chain, depth, index, fpr, public=False, testnet=False, script_type='standard'):
         """
         Create a public or private BIP32Key using key material and chain code.
 
@@ -128,6 +158,8 @@ class BIP32Key(object):
 
         public   If true, this keypair will only contain a public key and can only create
                  a public key chain.
+
+        script_type This is the type of script for address presentation purposes.
         """
 
         self.public = public
@@ -143,6 +175,7 @@ class BIP32Key(object):
         self.index = index
         self.parent_fpr = fpr
         self.testnet = testnet
+        self.script_type = script_type
 
 
     # Internal methods not intended to be called externally
@@ -189,7 +222,7 @@ class BIP32Key(object):
         secret = (b'\0'*32 + int_to_string(k_int))[-32:]
         
         # Construct and return a new BIP32Key
-        return BIP32Key(secret=secret, chain=Ir, depth=self.depth+1, index=i, fpr=self.Fingerprint(), public=False, testnet=self.testnet)
+        return BIP32Key(secret=secret, chain=Ir, depth=self.depth+1, index=i, fpr=self.Fingerprint(), public=False, testnet=self.testnet, script_type=self.script_type)
 
 
     def CKDpub(self, i):
@@ -224,7 +257,7 @@ class BIP32Key(object):
         K_i = ecdsa.VerifyingKey.from_public_point(point, curve=SECP256k1)
 
         # Construct and return a new BIP32Key
-        return BIP32Key(secret=K_i, chain=Ir, depth=self.depth+1, index=i, fpr=self.Fingerprint(), public=True, testnet=self.testnet)
+        return BIP32Key(secret=K_i, chain=Ir, depth=self.depth+1, index=i, fpr=self.Fingerprint(), public=True, testnet=self.testnet, script_type=self.script_type)
 
 
     # Public methods
@@ -283,7 +316,9 @@ class BIP32Key(object):
 
 
     def Address(self):
-        "Return compressed public key address"
+        "Return appropriate address format."
+        if self.script_type == 'p2wpkh-p2sh':
+            return self.P2WPKHoP2SHAddress()
         addressversion = b'\x24' if not self.testnet else b'\x6f'
         vh160 = addressversion + self.Identifier()
         return Base58.check_encode(vh160)
@@ -316,9 +351,9 @@ class BIP32Key(object):
         if self.public is True and private is True:
             raise Exception("Cannot export an extended private key from a public-only deterministic key")
         if not self.testnet:
-            version = EX_MAIN_PRIVATE[0] if private else EX_MAIN_PUBLIC[0]
+            version = XPRV_HEADERS_MAIN if private else XPUB_HEADERS_MAIN
         else:
-            version = EX_TEST_PRIVATE[0] if private else EX_TEST_PUBLIC[0]
+            version = XPRV_HEADERS_TEST if private else XPUB_HEADERS_TEST
         depth = bytes(bytearray([self.depth]))
         fpr = self.parent_fpr
         child = struct.pack('>L', self.index)
