@@ -176,7 +176,23 @@ key generator using that extended public key as input:
     3QD663sADhZw6s5EkhZggfVwV2js29ukFu
     3NSLKcPLSR3Z5fWZ2e1a5neCXjpRKR6qzB
     3BTRMGrZ2VNsGzb613kJe12U8jPRvNPVoV
-
+    
+    $ echo zpub6n7ziKnnWRPjMcKxuqhAJb4ETH6HfdiWxiGfjTc26MGTk6rp9gWzUw2BtLjt5ygrEc47tBmtSXN9Aj8dFt3cGNtyz5KLdaKpYTrwfuytP5K | \
+         bip32gen \
+         -i xpub -f - \
+         -o addr -F - \
+         0 1 2 3 4 5 6 7 8 9
+    grs1qdpshl2s7j6arluzhz3q9wewr8hcu6xdeyuc9sv
+    grs1qr5g6tuawazjdmfv30989kwwjadwka33gwzpwal
+    grs1q59mxhqddtk7q7d3yy4a9r8ks0cvkq262c76r02
+    grs1qv56e60qanh30vdvm2weh9wjhtsf5qm5c3a5kcq
+    grs1qdns5jtps586p4ymunmq6xv33swaruuz2v9mavp
+    grs1qhcwdywkwd5gg8w3375ffeae2t72029f8s3hmd5
+    grs1qvp4z790xzyfnf4syuhwgr06ujk0dayxj9uerst
+    grs1qqxqzvg6x2zgas6p3zt6el33lezfaa89m7ecllv
+    grs1qxhf3x26jjhp7ca43gfn6nd3vlz44dsmec8xr8q
+    grs1qyukscyq0dztctm8dh58zerzf4dpe5cr3srm96w
+    
 An offline machine could generate the corresponding private keys to
 spend from those addresses by using an *extended private key* for the
 account:
