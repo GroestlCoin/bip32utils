@@ -317,7 +317,7 @@ class BIP32Key(object):
 
     def Address(self):
         "Return appropriate address format."
-        if self.script_type == 'p2wpkh-p2sh':
+        if self.script_type in ['p2wpkh-p2sh', 'p2wsh-p2sh']:
             return self.P2WPKHoP2SHAddress()
         addressversion = b'\x24' if not self.testnet else b'\x6f'
         vh160 = addressversion + self.Identifier()
