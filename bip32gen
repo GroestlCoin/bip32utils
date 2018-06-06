@@ -127,7 +127,7 @@ def ReadEntropy(args):
    return entropy
 
 
-valid_output_types = ['addr','privkey','wif','pubkey','xprv','xpub','chain']
+valid_output_types = ['addr','p2shaddr','privkey','wif','pubkey','xprv','xpub','chain']
 
 def GetArgs():
    "Parse command line and validate inputs"
@@ -231,6 +231,8 @@ if __name__ == "__main__":
          prefix = '' if not args.verbose else otype+':'+' '*(8-len(otype))
          if otype == 'addr':
             WriteOutput(args.to_file, prefix, key.Address(), False)
+         elif otype == 'p2shaddr':
+            WriteOutput(args.to_file, prefix, key.P2WPKHoP2SHAddress(), False) 
          elif otype == 'privkey':
             WriteOutput(args.to_file, prefix, key.PrivateKey(), args.output_hex)
          elif otype == 'wif':
