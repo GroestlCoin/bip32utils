@@ -74,7 +74,7 @@ Script Parameters
                             filespec of output data, '-' for stdout
       -o OUTPUT_TYPE, --output-type OUTPUT_TYPE
                             output types, comma separated, from
-                            addr|p2shaddr|privkey|wif|pubkey|xprv|xpub|chain
+                            addr|privkey|wif|pubkey|xprv|xpub|chain
       -v, --verbose         verbose output, not for machine parsing
       -d, --debug           enable debugging output
       -t, --testnet         use testnet format
@@ -164,7 +164,7 @@ key generator using that extended public key as input:
     $ echo ypub6XDth9u8DzXV1tcpDtoDKMf6kVMaVMn1juVWEesTshcX4zUVvfNgjPJLXrD9N7AdTLnbHFL64KmBn3SNaTe69iZYbYCqLCCNPZKbM3NdVgT | \
          bip32gen \
          -i xpub -f - \
-         -o p2shaddr -F - \
+         -o addr -F - \
          0 1 2 3 4 5 6 7 8 9
     39Sa24SmjWXtBEvanCACcjesvE9E9w41hL
     36KbCtJto6cfnwtRPMRV2u3egj5LExDFcA
