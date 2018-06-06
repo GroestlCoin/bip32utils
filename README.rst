@@ -4,12 +4,12 @@ Introduction
 .. image:: https://travis-ci.org/prusnak/bip32utils.svg?branch=master
     :target: https://travis-ci.org/prusnak/bip32utils
 
-The bip32utils library is a pure Python implementation of Bitcoin
+The bip32utils library is a pure Python implementation of Groestlcoin
 hierarchical deterministic wallet ("HD Wallet") ECDSA key generation
 as specified in BIP0032 (Bitcoin Improvement Proposal #0032).
 
 Deterministic ECDSA key generation allows creating a sequence of
-Bitcoin private and public ECDSA keys from an initial seed and a
+Groestlcoin private and public ECDSA keys from an initial seed and a
 hierarchical set of indices.  A number of benefits follow:
 
 * An entire wallet can be backed up once by storing the wallet seed or
@@ -95,7 +95,7 @@ output the serialized extended private key for that to stdout:
 ::
 
     $ bip32gen -i entropy -f /dev/random -n 128 -o xprv -F - m
-    xprv9s21ZrQH143K3eqKCaAW9CvAiKR8SHdikQnR8dVs8eBxC9fYtW69k1gLRTG5o2Rn3gtz651yFGzxRFjtfjLQHmh4kT7YF3vZcZgGdfX7ZVS
+    xprv9s21ZrQH143K34uCyGkN14i4D77iMdxNzd2J6AEyDSFPpsQAwfuFFM6pzbokbsL4PxY1f5zSSiP8Vwky6WaqBrEVudc6r7LPh5rGQU5vNiF
 
 To generate the BIP0032 test vector #1, using entropy
 supplied as a hex-encoded string on stdin, and output the private
@@ -138,28 +138,28 @@ course this would be unique for each situation):
         -i entropy -f - -x \
         -o xpub -F - \
         m/0h/0
-    xpub6ASuArnXKPbfEVRpCesNx4P939HDXENHkksgxsVG1yNp9958A33qYoPiTN9QrJmWFa2jNLdK84bWmyqTSPGtApP8P7nHUYwxHPhqmzUyeFG
+    xpub6ASuArnXKPbfEVRpCesNx4P939HDXENHkksgxsVG1yNp9958A33qYoPiTN9QrJmWFa2jNLdK84bWmyqTSPGtApP8P7nHUYwxHPhqn2jfmKh
 
 Then, to derive public child keys, that person would run the
 key generator using that extended public key as input:
 
 ::
 
-    $ echo xpub6ASuArnXKPbfEVRpCesNx4P939HDXENHkksgxsVG1yNp9958A33qYoPiTN9QrJmWFa2jNLdK84bWmyqTSPGtApP8P7nHUYwxHPhqmzUyeFG | \
+    $ echo xpub6ASuArnXKPbfEVRpCesNx4P939HDXENHkksgxsVG1yNp9958A33qYoPiTN9QrJmWFa2jNLdK84bWmyqTSPGtApP8P7nHUYwxHPhqn2jfmKh | \
          bip32gen \
          -i xpub -f - \
          -o addr -F - \
          0 1 2 3 4 5 6 7 8 9
-    1BvgsfsZQVtkLS69NvGF8rw6NZW2ShJQHr
-    1B1TKfsCkW5LQ6R1kSXUx7hLt49m1kwz75
-    1D2LvY1T3yT4xWgoXkXhAbh1fbY39owifJ
-    1L71JnrWfB45Z1g2et1zeDAkzrpY8eyJMH
-    1ACa2mfirthEwmnHVHcBEAVfTHJkajpjod
-    1CR1rZqA8cwbohoj9bNmcrYxx31Zx2jw4c
-    1PkyqPChrqwM1dee8KTMpsWWBuXgmGVNoi
-    1L3HVcGagSUEb2d24SfHV7Kyu6kUNpDL51
-    17JbSP83rPWmbdcdtiiTNqBE8MgGN8kmUk
-    1MWb4Pv4ZCUmbnFgA5D3MtYyhMh4q8KCrd
+    Fg6QKabvxzaHn37GG2FibNjR2imz1NhGqj
+    FfBAmabaJzksqhS8dYWxQdVfYDRib26SCP
+    FhC4NSjpcU8cQ7hvQrXAd7VLKkozeiYTs3
+    FpGikhatDfjczch9Xz1U6iy5f26ViZyLpF
+    FeNHUgQ6RPNnPNoQNPbeggHz7SaiCZF9cc
+    FgajJUZXh7d9FJpr2hNF5NMHcCHXbDjfpd
+    FsvhHHw5RLctTEfm1RSqHPJpr4oeQxwGSx
+    FpCzwWzxEw9n2de8wYekwd8JZG2RzHMa7r
+    FbUJtHrRQtCK3EdkmphvqLyYnWxDtZcc3e
+    FqgJWJeS7hAK3PGo3BCWpQMJMWy2TyWbKo
 
 An offline machine could generate the corresponding private keys to
 spend from those addresses by using an *extended private key* for the
@@ -172,7 +172,7 @@ account:
         -i entropy -f - -x \
         -o xprv -F - \
         m/0h/0
-    xprv9wTYmMFdV23N21MM6dLNavSQV7Sj7meSPXx6AV5eTdqqGLjycVjb115Ec5LgRAXscPZgy5G4jQ9csyyZLN3PZLxoM1h3BoPuEJzsgeypdKj
+    xprv9wTYmMFdV23N21MM6dLNavSQV7Sj7meSPXx6AV5eTdqqGLjycVjb115Ec5LgRAXscPZgy5G4jQ9csyyZLN3PZLxoM1h3BoPuEJzsgh1jc9V
 
 Then to generate the corresponding private keys (here shown in wallet import format):
 
@@ -183,16 +183,16 @@ Then to generate the corresponding private keys (here shown in wallet import for
          -i xprv -f - \
          -o wif -F - \
          0 1 2 3 4 5 6 7 8 9
-    L3dzheSvHWc2scJdiikdZmYdFzPcvZMAnT5g62ikVWZdBewoWpL1
-    L22jhG8WTNmuRtqFvzvpnhe32F8FefJFfsLJpSr1CYsRrZCyTwKZ
-    KwhVMKLLSMt7DemnUxhSftkdqPjWYmPKt31nmV3BB7TdVaMFzqgP
-    KySK2geQrXWYR7f2p9C9Exr4CLngFQnnzQegSaKAfxNupqecSwdU
-    KxSKj3b3EdHSyN3C5sSwRL7TMmxpEVkJ7Cw4fQTMUYXsCZRbmBAP
-    L5kxG5qokHeTJSwco5JzCEdAy5TN2M2Tj2QvxGpvVuSVP5bJRAUT
-    L3oTQGyHQvE3GkRQJkgPs9vY8NRTxdwacHu9Xu9QBPTpgHCSGume
-    KxABnXp7SiuWi218c14KkjEMV7SjcfXnvsWaveNVxWZU1Rwi8zNQ
-    L1Zku8j3mCiiHxZdo6NDLHv6jcA1JyNufUSHBMiznML38vNr9Agh
-    L46bxscw878ytxNHro7ghNXuybUv8aNJAY1UudH1HUxD2pecBhR8
+    L3dzheSvHWc2scJdiikdZmYdFzPcvZMAnT5g62ikVWZdBeyzYNn7
+    L22jhG8WTNmuRtqFvzvpnhe32F8FefJFfsLJpSr1CYsRrZHAaNfT
+    KwhVMKLLSMt7DemnUxhSftkdqPjWYmPKt31nmV3BB7TdVaKBiyZW
+    KySK2geQrXWYR7f2p9C9Exr4CLngFQnnzQegSaKAfxNupqfogL3x
+    KxSKj3b3EdHSyN3C5sSwRL7TMmxpEVkJ7Cw4fQTMUYXsCZMo5Jzo
+    L5kxG5qokHeTJSwco5JzCEdAy5TN2M2Tj2QvxGpvVuSVP5Xbvrkg
+    L3oTQGyHQvE3GkRQJkgPs9vY8NRTxdwacHu9Xu9QBPTpgHBdR6Xe
+    KxABnXp7SiuWi218c14KkjEMV7SjcfXnvsWaveNVxWZU1RvdqEhr
+    L1Zku8j3mCiiHxZdo6NDLHv6jcA1JyNufUSHBMiznML38vKVYcom
+    L46bxscw878ytxNHro7ghNXuybUv8aNJAY1UudH1HUxD2phYvGzd
 
 Python bip32utils Library
 =========================
@@ -206,7 +206,7 @@ terminology distinction is made between an ECDSA private and public
 key pair and a full BIP32Key, which internally holds an ECDSA key pair
 and other data.
 
-A BIP32Key may act like a standard Bitcoin keypair, providing the
+A BIP32Key may act like a standard Groestlcoin keypair, providing the
 means to sign transactions with its internal ECDSA private key or to
 generate a receiving address with its internal ECDSA public key. In
 addition, a BIP32Key can act as the parent node for a set of indexed
