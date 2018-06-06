@@ -74,7 +74,7 @@ Script Parameters
                             filespec of output data, '-' for stdout
       -o OUTPUT_TYPE, --output-type OUTPUT_TYPE
                             output types, comma separated, from
-                            addr|privkey|wif|pubkey|xprv|xpub|chain
+                            addr|p2shaddr|privkey|wif|pubkey|xprv|xpub|chain
       -v, --verbose         verbose output, not for machine parsing
       -d, --debug           enable debugging output
       -t, --testnet         use testnet format
