@@ -160,6 +160,22 @@ key generator using that extended public key as input:
     FpCzwWzxEw9n2de8wYekwd8JZG2RzHMa7r
     FbUJtHrRQtCK3EdkmphvqLyYnWxDtZcc3e
     FqgJWJeS7hAK3PGo3BCWpQMJMWy2TyWbKo
+    
+    $ echo ypub6XDth9u8DzXV1tcpDtoDKMf6kVMaVMn1juVWEesTshcX4zUVvfNgjPJLXrD9N7AdTLnbHFL64KmBn3SNaTe69iZYbYCqLCCNPZKbM3NdVgT | \
+         bip32gen \
+         -i xpub -f - \
+         -o p2shaddr -F - \
+         0 1 2 3 4 5 6 7 8 9
+    39Sa24SmjWXtBEvanCACcjesvE9E9w41hL
+    36KbCtJto6cfnwtRPMRV2u3egj5LExDFcA
+    32d3RCVd7A6TXAccDrzTJjSoETbsxboFrE
+    3Nc3B36LrmqbYjuWMELZ8G7jBJhEcpj1fQ
+    3PWcddufeUaXX3Xm6a98SRB3Ss6CfUd22w
+    38unRM8X6NeYgoP4Cd1Q7EbfDSRjeLMZa5
+    3CBVGrD8jx8zBwWfHnDgSFasS4U7FHV5Uq
+    3QD663sADhZw6s5EkhZggfVwV2js29ukFu
+    3NSLKcPLSR3Z5fWZ2e1a5neCXjpRKR6qzB
+    3BTRMGrZ2VNsGzb613kJe12U8jPRvNPVoV
 
 An offline machine could generate the corresponding private keys to
 spend from those addresses by using an *extended private key* for the
