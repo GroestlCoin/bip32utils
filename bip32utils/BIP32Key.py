@@ -10,7 +10,7 @@ import hashlib
 import ecdsa
 import struct
 import codecs
-import Base58
+from . import Base58 
 
 from hashlib import sha256
 from ecdsa.curves import SECP256k1
