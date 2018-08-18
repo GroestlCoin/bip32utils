@@ -98,7 +98,7 @@ class BIP32Key(object):
             (False, False, XPRV_HEADERS_MAIN),
             (True,  False, XPRV_HEADERS_TEST),
             (False, True,  XPUB_HEADERS_MAIN),
-            (True,  False, XPUB_HEADERS_TEST),
+            (True,  True, XPUB_HEADERS_TEST),
         ]:
             for key, header in d.items():
                 if version == header:
